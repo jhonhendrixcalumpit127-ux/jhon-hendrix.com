@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me | Jhon Hendrix Calumpit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --neon-blue: #00f0ff;
+            --neon-purple: #b026ff;
+            --neon-pink: #ff2d95;
+            --bg-dark: #050714;
+            --bg-card: rgba(10, 14, 39, 0.7);
+            --text-light: #e0e9ff;
+        }
+
+        body {
+            background: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at top left, rgba(0, 240, 255, 0.08), transparent 50%),
+                radial-gradient(circle at bottom right, rgba(176, 38, 255, 0.08), transparent 50%);
+            min-height: 100vh;
+            color: var(--text-light);
+            padding-bottom: 100px;
+            overflow-x: hidden;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            width: 0%;
+            z-index: 999;
+            transition: width 0.1s ease;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 50px 20px 30px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .page-header h1 {
+            font-size: 1.9rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: rgba(224, 233, 255, 0.6);
+            font-size: 0.95rem;
+        }
+
+        .content {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 16px;
+            padding: 22px 20px;
+            transition: all 0.35s ease;
+            opacity: 0;
+            transform: translateY(25px);
+            animation: cardFadeIn 0.7s ease forwards;
+        }
+
+        .glass-card:nth-child(1) { animation-delay: 0.1s; }
+        .glass-card:nth-child(2) { animation-delay: 0.2s; }
+        .glass-card:nth-child(3) { animation-delay: 0.3s; }
+        .glass-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .glass-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .card-title i {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(0, 240, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neon-blue);
+            font-size: 16px;
+        }
+
+        .card-title h2 {
+            font-size: 1.1rem;
+        }
+
+        .glass-card p {
+            color: rgba(224, 233, 255, 0.75);
+            font-size: 0.92rem;
+            line-height: 1.65;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .info-item {
+            background: rgba(0, 240, 255, 0.06);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .info-item .label {
+            font-size: 0.7rem;
+            color: rgba(224, 233, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .info-item .value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--neon-blue);
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .skill-tag {
+            background: rgba(176, 38, 255, 0.15);
+            border: 1px solid rgba(176, 38, 255, 0.3);
+            color: #d4a5ff;
+            font-size: 0.78rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(8, 12, 34, 0.85);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 10px 20px;
+            border-top: 1px solid rgba(0, 240, 255, 0.1);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: rgba(224, 233, 255, 0.4);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            color: var(--neon-blue);
+            transform: translateY(-3px);
+        }
+
+        .nav-btn i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .nav-btn span {
+            font-size: 0.65rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="page-header">
+        <h1>About Me</h1>
+        <p>Get to know who I am</p>
+    </div>
+
+    <div class="content">
+        <div class="glass-card">
+            <div class="card-title">
+                <i class="fas fa-user"></i>
+                <h2>Who I Am</h2>
+            </div>
+            <p>
+                Hey! I'm <strong style="color: var(--neon-blue);">Jhon Hendrix Calumpit</strong>, 
+                a Grade 12 student taking Empowerment Technologies. I enjoy turning ideas into 
+                interactive webpages, experimenting with AI prompts, organizing data in spreadsheets, 
+                and designing in Canva.
+            </p>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="label">Location</div>
+                    <div class="value">Davao Region</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">Level</div>
+                    <div class="value">SHS G12</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">Focus</div>
+                    <div class="value">Web + EmpTech</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">Status</div>
+                    <div class="value">Student</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <div class="card-title">
+                <i class="fas fa-heart"></i>
+                <h2>What I Love</h2>
+            </div>
+            <p>
+                Building clean and interactive pages, learning new tech skills, 
+                solving problems with logic, and creating personal projects that actually look good.
+            </p>
+        </div>
+
+        <div class="glass-card">
+            <div class="card-title">
+                <i class="fas fa-bolt"></i>
+                <h2>Skills & Tools</h2>
+            </div>
+            <div class="skills-list">
+                <span class="skill-tag">HTML & CSS</span>
+                <span class="skill-tag">Web Design</span>
+                <span class="skill-tag">AI Prompting</span>
+                <span class="skill-tag">Spreadsheets</span>
+                <span class="skill-tag">Canva</span>
+                <span class="skill-tag">Problem Solving</span>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <div class="card-title">
+                <i class="fas fa-quote-left"></i>
+                <h2>My Motto</h2>
+            </div>
+            <p style="font-style: italic; color: var(--neon-blue);">
+                "Building things that look good and actually work — one line of code at a time."
+            </p>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-btn">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="works.html" class="nav-btn">
+            <i class="fas fa-book"></i>
+            <span>Works</span>
+        </a>
+        <a href="projects.html" class="nav-btn">
+            <i class="fas fa-folder"></i>
+            <span>Projects</span>
+        </a>
+        <a href="contact.html" class="nav-btn">
+            <i class="fas fa-paper-plane"></i>
+            <span>Contact</span>
+        </a>
+    </nav>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html>

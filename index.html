@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio | Student</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --neon-blue: #00f0ff;
+            --neon-purple: #b026ff;
+            --neon-pink: #ff2d95;
+            --bg-dark: #050714;
+            --bg-card: rgba(10, 14, 39, 0.7);
+            --text-light: #e0e9ff;
+        }
+
+        body {
+            background: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at top left, rgba(0, 240, 255, 0.08), transparent 50%),
+                radial-gradient(circle at bottom right, rgba(176, 38, 255, 0.08), transparent 50%);
+            min-height: 100vh;
+            color: var(--text-light);
+            padding-bottom: 90px;
+            overflow-x: hidden;
+        }
+
+        /* Scroll Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            width: 0%;
+            z-index: 999;
+            transition: width 0.1s ease;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            text-align: center;
+            padding: 60px 20px 40px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .profile-img-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 25px;
+        }
+
+        .profile-glow-ring {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple), var(--neon-pink), var(--neon-blue));
+            background-size: 400% 400%;
+            animation: rotateGlow 3s linear infinite;
+            z-index: -1;
+            filter: blur(8px);
+            opacity: 0.7;
+        }
+
+        .profile-img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            background: #0f172a;
+            display: block;
+        }
+
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .typing-text {
+            color: var(--neon-blue);
+            font-size: 1rem;
+            letter-spacing: 2px;
+        }
+
+        /* Cards Container */
+        .cards-container {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 16px;
+            padding: 22px 20px;
+            text-decoration: none;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: cardFadeIn 0.7s ease forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:nth-child(1) { animation-delay: 0.15s; }
+        .glass-card:nth-child(2) { animation-delay: 0.25s; }
+        .glass-card:nth-child(3) { animation-delay: 0.35s; }
+        .glass-card:nth-child(4) { animation-delay: 0.45s; }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 20px rgba(0, 240, 255, 0.05);
+        }
+
+        .card-icon-wrapper {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(0, 240, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--neon-blue);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover .card-icon-wrapper {
+            background: rgba(0, 240, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .card-text h3 {
+            font-size: 1.05rem;
+            margin-bottom: 3px;
+        }
+
+        .card-text p {
+            font-size: 0.85rem;
+            color: rgba(224, 233, 255, 0.6);
+        }
+
+        .card-arrow {
+            margin-left: auto;
+            color: rgba(224, 233, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover .card-arrow {
+            color: var(--neon-blue);
+            transform: translateX(4px);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(8, 12, 34, 0.8);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 10px 20px;
+            border-top: 1px solid rgba(0, 240, 255, 0.1);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: rgba(224, 233, 255, 0.4);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            color: var(--neon-blue);
+            transform: translateY(-3px);
+        }
+
+        .nav-btn i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .nav-btn span {
+            font-size: 0.65rem;
+        }
+
+        /* Animations */
+        @keyframes rotateGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Scroll Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Profile Section -->
+    <div class="profile-section">
+        <div class="profile-img-container">
+            <div class="profile-glow-ring"></div>
+            <img src="profile.jpg" alt="Jhon Hendrix Calumpit" class="profile-img">
+        </div>
+        <h1>Jhon Hendrix Calumpit</h1>
+        <p class="typing-text" id="typingText">Student • Creator • Dreamer</p>
+    </div>
+
+    <!-- Cards -->
+    <div class="cards-container">
+        <a href="about.html" class="glass-card">
+            <div class="card-icon-wrapper"><i class="fas fa-user"></i></div>
+            <div class="card-text">
+                <h3>About Me</h3>
+                <p>Get to know me better</p>
+            </div>
+            <i class="fas fa-chevron-right card-arrow"></i>
+        </a>
+
+        <a href="works.html" class="glass-card">
+            <div class="card-icon-wrapper"><i class="fas fa-book-open"></i></div>
+            <div class="card-text">
+                <h3>My Works</h3>
+                <p>Poems, stories & essays</p>
+            </div>
+            <i class="fas fa-chevron-right card-arrow"></i>
+        </a>
+
+        <a href="projects.html" class="glass-card">
+            <div class="card-icon-wrapper"><i class="fas fa-code"></i></div>
+            <div class="card-text">
+                <h3>Projects</h3>
+                <p>My creations & outputs</p>
+            </div>
+            <i class="fas fa-chevron-right card-arrow"></i>
+        </a>
+
+        <a href="contact.html" class="glass-card">
+            <div class="card-icon-wrapper"><i class="fas fa-envelope"></i></div>
+            <div class="card-text">
+                <h3>Contact</h3>
+                <p>Reach out to me</p>
+            </div>
+            <i class="fas fa-chevron-right card-arrow"></i>
+        </a>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-btn active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="works.html" class="nav-btn">
+            <i class="fas fa-book"></i>
+            <span>Works</span>
+        </a>
+        <a href="projects.html" class="nav-btn">
+            <i class="fas fa-folder"></i>
+            <span>Projects</span>
+        </a>
+        <a href="contact.html" class="nav-btn">
+            <i class="fas fa-paper-plane"></i>
+            <span>Contact</span>
+        </a>
+    </nav>
+
+    <script>
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Typing Effect
+        const text = "Student • Creator • Dreamer";
+        const speed = 80;
+        let i = 0;
+        
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById('typingText').textContent = text.substring(0, i + 1);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+        window.onload = typeWriter;
+    </script>
+    
+</body>
+</html>

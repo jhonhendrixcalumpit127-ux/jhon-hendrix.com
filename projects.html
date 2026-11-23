@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Jhon Hendrix Calumpit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --neon-blue: #00f0ff;
+            --neon-purple: #b026ff;
+            --neon-pink: #ff2d95;
+            --bg-dark: #050714;
+            --bg-card: rgba(10, 14, 39, 0.7);
+            --text-light: #e0e9ff;
+        }
+
+        body {
+            background: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at top left, rgba(0, 240, 255, 0.08), transparent 50%),
+                radial-gradient(circle at bottom right, rgba(176, 38, 255, 0.08), transparent 50%);
+            min-height: 100vh;
+            color: var(--text-light);
+            padding-bottom: 100px;
+            overflow-x: hidden;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            width: 0%;
+            z-index: 999;
+            transition: width 0.1s ease;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 50px 20px 30px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .page-header h1 {
+            font-size: 1.9rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: rgba(224, 233, 255, 0.6);
+            font-size: 0.95rem;
+        }
+
+        .content {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .work-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.35s ease;
+            opacity: 0;
+            transform: translateY(25px);
+            animation: cardFadeIn 0.7s ease forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .work-card:nth-child(1) { animation-delay: 0.1s; }
+        .work-card:nth-child(2) { animation-delay: 0.2s; }
+
+        .work-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .work-type {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .type-poem {
+            background: rgba(176, 38, 255, 0.15);
+            color: #d4a5ff;
+            border: 1px solid rgba(176, 38, 255, 0.3);
+        }
+
+        .type-story {
+            background: rgba(0, 240, 255, 0.12);
+            color: var(--neon-blue);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+        }
+
+        .type-essay {
+            background: rgba(255, 45, 149, 0.12);
+            color: #ff7eb9;
+            border: 1px solid rgba(255, 45, 149, 0.25);
+        }
+
+        .work-card h3 {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+        }
+
+        .work-card p {
+            color: rgba(224, 233, 255, 0.65);
+            font-size: 0.88rem;
+            line-height: 1.55;
+        }
+
+        .work-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: rgba(224, 233, 255, 0.45);
+        }
+
+        .work-meta i {
+            margin-right: 4px;
+        }
+
+        .empty-note {
+            text-align: center;
+            padding: 30px 20px;
+            color: rgba(224, 233, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(8, 12, 34, 0.85);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 10px 20px;
+            border-top: 1px solid rgba(0, 240, 255, 0.1);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: rgba(224, 233, 255, 0.4);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            color: var(--neon-blue);
+            transform: translateY(-3px);
+        }
+
+        .nav-btn i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .nav-btn span {
+            font-size: 0.65rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Expandable content styles */
+        .analysis-details {
+            margin-top: 16px;
+            border-top: 1px solid rgba(0, 240, 255, 0.18);
+            padding-top: 12px;
+        }
+
+        .analysis-details summary {
+            color: var(--neon-blue);
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            list-style-position: inside;
+            padding: 4px 0;
+        }
+
+        .analysis-paper {
+            margin-top: 14px;
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(5, 7, 20, 0.65);
+            border: 1px solid rgba(176, 38, 255, 0.2);
+        }
+
+        .analysis-paper h2 {
+            color: var(--neon-blue);
+            font-size: 1.05rem;
+            line-height: 1.45;
+            margin-bottom: 16px;
+        }
+
+        .analysis-paper h3 {
+            color: #d4a5ff;
+            font-size: 0.92rem;
+            margin: 16px 0 7px;
+        }
+
+        .analysis-paper p {
+            color: rgba(224, 233, 255, 0.78);
+            font-size: 0.86rem;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+    /* Embedded Sales Inventory Spreadsheet */
+        .inventory-section {
+            max-width: 1100px;
+            margin: 38px auto 45px;
+            padding: 0 20px;
+            color: var(--text-light);
+        }
+        .inventory-heading {
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 14px; flex-wrap: wrap; margin-bottom: 18px;
+        }
+        .inventory-heading h2 {
+            color: var(--neon-blue); font-size: 1.45rem; margin: 5px 0 7px;
+        }
+        .inventory-heading p { color: rgba(224,233,255,.65); font-size: .88rem; }
+        .inventory-kicker { color: var(--neon-purple) !important; letter-spacing: 1.5px; font-size: .7rem !important; font-weight: 700; }
+        .inventory-sheet-tag {
+            border: 1px solid rgba(0,240,255,.25); background: rgba(0,240,255,.08);
+            color: var(--neon-blue); border-radius: 20px; padding: 8px 12px; font-size: .78rem;
+        }
+        .inventory-panel {
+            background: var(--bg-card); border: 1px solid rgba(0,240,255,.15);
+            border-radius: 16px; padding: 18px; margin: 14px 0;
+            backdrop-filter: blur(12px);
+        }
+        .inventory-panel h3 { font-size: 1rem; margin-bottom: 13px; color: #e9f5ff; }
+        .inventory-panel h3 i { color: var(--neon-blue); margin-right: 7px; }
+        .inventory-hint, .inventory-formula-note { color: rgba(224,233,255,.62); font-size: .78rem; line-height: 1.55; margin-bottom: 12px; }
+        .inventory-table-wrap { overflow-x: auto; width: 100%; }
+        .inventory-table { border-collapse: collapse; width: 100%; min-width: 850px; font-size: .78rem; }
+        .inventory-table th, .inventory-table td { padding: 10px 9px; border-bottom: 1px solid rgba(224,233,255,.1); text-align: left; white-space: nowrap; }
+        .inventory-table th { color: var(--neon-blue); background: rgba(0,240,255,.07); font-weight: 700; }
+        .inventory-table td { color: rgba(224,233,255,.82); }
+        .inventory-table tbody tr:hover { background: rgba(0,240,255,.055); }
+        .inventory-summary-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(135px,1fr)); gap: 10px; margin-bottom: 13px; }
+        .inventory-stat { padding: 13px; border-radius: 11px; background: rgba(0,240,255,.06); border: 1px solid rgba(0,240,255,.12); }
+        .inventory-stat span { display: block; color: rgba(224,233,255,.6); font-size: .72rem; margin-bottom: 7px; }
+        .inventory-stat strong { color: var(--neon-blue); font-size: 1rem; }
+        .inventory-answers { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 10px; }
+        .inventory-answer { padding: 12px; border-radius: 10px; background: rgba(176,38,255,.07); border: 1px solid rgba(176,38,255,.14); }
+        .inventory-answer strong { display: block; color: #d4a5ff; font-size: .8rem; margin-bottom: 6px; }
+        .inventory-answer p { color: rgba(224,233,255,.75); font-size: .8rem; line-height: 1.5; margin: 0; }
+        .inventory-notes { padding-left: 20px; color: rgba(224,233,255,.75); font-size: .8rem; line-height: 1.7; }
+        @media (max-width: 600px) {
+            .inventory-section { padding: 0 14px; }
+            .inventory-panel { padding: 14px; }
+            .inventory-heading h2 { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="page-header">
+        <h1>Projects</h1>
+        <p>My creations & outputs</p>
+    </div>
+
+    <div class="content">
+        <div class="work-card">
+            <span class="work-type type-essay">Essay</span>
+            <h3>Why Digital Skills Matter</h3>
+            <p>Reflections from EmpTech class on how technology empowers students like us to create and connect.</p>
+            <div class="work-meta">
+                <span><i class="fas fa-calendar"></i> 2026</span>
+                <span><i class="fas fa-pen"></i> Academic</span>
+            </div>
+
+            <details class="analysis-details">
+                <summary>Read the complete essay</summary>
+                <article class="analysis-paper">
+                    <h2>Why Digital Skills Matter</h2>
+
+                    <h3>Introduction</h3>
+                    <p>In today’s world, digital skills are no longer optional—they are essential for almost every part of life. From schoolwork and communication to future careers, knowing how to use technology effectively helps us succeed. In Empowerment Technologies, we learn that digital literacy gives students the power to create, collaborate, and solve problems in new ways.</p>
+
+                    <h3>Empowering Students</h3>
+                    <p>Digital skills allow students to access information quickly, organize their work better, and express their ideas creatively. Tools like spreadsheets help us analyze data, while web development and design platforms let us build our own projects. These abilities make learning more interactive and prepare us for the demands of the modern world.</p>
+
+                    <h3>Connecting and Creating</h3>
+                    <p>Technology connects people across distances. Through online platforms, we can share our work, collaborate on projects, and learn from others. Digital skills also encourage creativity—whether we are designing graphics, writing code, or creating presentations. When we master these tools, we turn ideas into real outputs that others can see and use.</p>
+
+                    <h3>Preparing for the Future</h3>
+                    <p>Many jobs now require at least basic digital skills. By learning them early, we become more confident and competitive. More importantly, these skills teach us to adapt. Technology keeps changing, and students who understand how to learn new tools will always be ready for whatever comes next.</p>
+
+                    <h3>Conclusion</h3>
+                    <p>Digital skills matter because they empower us to learn better, create more, and connect with the world. In EmpTech and beyond, these abilities are not just about using computers—they are about building a stronger, more capable version of ourselves.</p>
+                </article>
+            </details>
+        </div>
+
+        <div class="work-card">
+            <span class="work-type type-poem">Poem</span>
+            <h3>Learning in the Digital Age</h3>
+            <p>How AI tools, web development, and creative design are shaping the way I learn and build.</p>
+            <div class="work-meta">
+                <span><i class="fas fa-calendar"></i> 2026</span>
+                <span><i class="fas fa-pen"></i> EmpTech</span>
+            </div>
+
+            <details class="analysis-details">
+                <summary>Read the complete poem</summary>
+                <article class="analysis-paper">
+                    <h2>Learning in the Digital Age</h2>
+
+                    <p>Screens light up the path I take,<br>
+                    New tools to use, new things to make.<br>
+                    With code and colors, lines and dreams,<br>
+                    I build ideas that shine and gleam.</p>
+
+                    <p>AI whispers answers when I’m stuck,<br>
+                    Websites rise from simple luck.<br>
+                    Design and data dance as one,<br>
+                    Learning never feels half-done.</p>
+
+                    <p>Each click becomes a step ahead,<br>
+                    Knowledge grows inside my head.<br>
+                    The digital world is wide and free,<br>
+                    And every skill belongs to me.</p>
+
+                    <p>So here I stand, both bold and bright,<br>
+                    Creating futures through the light.<br>
+                    In this age of wires and screens,<br>
+                    I learn, I grow, I chase my dreams.</p>
+                </article>
+            </details>
+        </div>
+    </div>
+
+    <section class="inventory-section" id="sales-inventory">
+      <div class="inventory-heading">
+        <div>
+          <p class="inventory-kicker">EMPOWERMENT TECHNOLOGIES · ACTIVITY 2</p>
+          <h2>School Store Sales and Inventory Report</h2>
+          <p>Complete spreadsheet content from the Sales Report worksheet.</p>
+        </div>
+        <span class="inventory-sheet-tag"><i class="fas fa-file-excel"></i> Sales Report</span>
+      </div>
+
+      <div class="inventory-panel">
+        <h3><i class="fas fa-table"></i> Product Sales and Inventory</h3>
+        <p class="inventory-hint">All 10 products and all 8 spreadsheet columns are included. Hover over calculated sales and remaining-stock values to view their original Excel formulas.</p>
+        <div class="inventory-table-wrap">
+          <table class="inventory-table">
+            <thead><tr>
+              <th>Product</th><th>Category</th><th>Unit Price</th><th>Quantity Sold</th>
+              <th>Total Sales</th><th>Beginning Stock</th><th>Remaining Stock</th><th>Sales Percentage</th>
+            </tr></thead>
+            <tbody>
+      <tr>
+        <td>USB Flash Drive</td>
+        <td>Computer Accessory</td>
+        <td>₱350</td>
+        <td>8</td>
+        <td title="Excel formula: =C4*D4">₱2,800</td>
+        <td>15</td>
+        <td title="Excel formula: =F4-D4">7</td>
+        <td>13.45%</td>
+      </tr>
+      <tr>
+        <td>Bond Paper</td>
+        <td>School Supply</td>
+        <td>₱250</td>
+        <td>12</td>
+        <td title="Excel formula: =C5*D5">₱3,000</td>
+        <td>30</td>
+        <td title="Excel formula: =F5-D5">18</td>
+        <td>14.41%</td>
+      </tr>
+      <tr>
+        <td>Ballpen</td>
+        <td>School Supply</td>
+        <td>₱20</td>
+        <td>35</td>
+        <td title="Excel formula: =C6*D6">₱700</td>
+        <td>50</td>
+        <td title="Excel formula: =F6-D6">15</td>
+        <td>3.36%</td>
+      </tr>
+      <tr>
+        <td>Notebook</td>
+        <td>School Supply</td>
+        <td>₱55</td>
+        <td>18</td>
+        <td title="Excel formula: =C7*D7">₱990</td>
+        <td>30</td>
+        <td title="Excel formula: =F7-D7">12</td>
+        <td>4.76%</td>
+      </tr>
+      <tr>
+        <td>Computer Mouse</td>
+        <td>Computer Accessory</td>
+        <td>₱450</td>
+        <td>6</td>
+        <td title="Excel formula: =C8*D8">₱2,700</td>
+        <td>10</td>
+        <td title="Excel formula: =F8-D8">4</td>
+        <td>12.97%</td>
+      </tr>
+      <tr>
+        <td>Keyboard</td>
+        <td>Computer Accessory</td>
+        <td>₱750</td>
+        <td>5</td>
+        <td title="Excel formula: =C9*D9">₱3,750</td>
+        <td>8</td>
+        <td title="Excel formula: =F9-D9">3</td>
+        <td>18.02%</td>
+      </tr>
+      <tr>
+        <td>Earphones</td>
+        <td>Computer Accessory</td>
+        <td>₱300</td>
+        <td>10</td>
+        <td title="Excel formula: =C10*D10">₱3,000</td>
+        <td>15</td>
+        <td title="Excel formula: =F10-D10">5</td>
+        <td>14.41%</td>
+      </tr>
+      <tr>
+        <td>Folder</td>
+        <td>School Supply</td>
+        <td>₱15</td>
+        <td>25</td>
+        <td title="Excel formula: =C11*D11">₱375</td>
+        <td>40</td>
+        <td title="Excel formula: =F11-D11">15</td>
+        <td>1.80%</td>
+      </tr>
+      <tr>
+        <td>Yellow Pad</td>
+        <td>School Supply</td>
+        <td>₱45</td>
+        <td>20</td>
+        <td title="Excel formula: =C12*D12">₱900</td>
+        <td>35</td>
+        <td title="Excel formula: =F12-D12">15</td>
+        <td>4.32%</td>
+      </tr>
+      <tr>
+        <td>Printer Ink</td>
+        <td>Computer Supply</td>
+        <td>₱650</td>
+        <td>4</td>
+        <td title="Excel formula: =C13*D13">₱2,600</td>
+        <td>8</td>
+        <td title="Excel formula: =F13-D13">4</td>
+        <td>12.49%</td>
+      </tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="inventory-panel">
+        <h3><i class="fas fa-chart-pie"></i> Sales Summary</h3>
+        
+    <div class="inventory-summary-grid">
+      <div class="inventory-stat"><span>Total Sales</span><strong>₱20,815</strong></div>
+      <div class="inventory-stat"><span>Average Sales</span><strong>₱2,081.50</strong></div>
+      <div class="inventory-stat"><span>Highest Sales</span><strong>₱3,750</strong></div>
+      <div class="inventory-stat"><span>Lowest Sales</span><strong>₱375</strong></div>
+      <div class="inventory-stat"><span>Number of Products</span><strong>10</strong></div>
+    </div>
+        <p class="inventory-formula-note"><strong>Spreadsheet formulas:</strong> Total Sales = SUM(E4:E13); Average Sales = AVERAGE(E4:E13); Highest Sales = MAX(E4:E13); Lowest Sales = MIN(E4:E13); Number of Products = COUNT(C4:C13).</p>
+      </div>
+
+      <div class="inventory-panel">
+        <h3><i class="fas fa-lightbulb"></i> Data Interpretation Answers</h3>
+        <div class="inventory-answers"><div class="inventory-answer"><strong>Q1. Highest total sales product:</strong><p>Keyboard (₱3,750)</p></div>
+<div class="inventory-answer"><strong>Q2. Lowest total sales product:</strong><p>Folder (₱375)</p></div>
+<div class="inventory-answer"><strong>Q3. Total sales of all products:</strong><p>₱20,815</p></div>
+<div class="inventory-answer"><strong>Q4. Average sales per product:</strong><p>₱2,081.50</p></div>
+<div class="inventory-answer"><strong>Q5. Highest quantity sold:</strong><p>Ballpen (35 units)</p></div>
+<div class="inventory-answer"><strong>Q6. Lowest remaining stock:</strong><p>Keyboard (3 units)</p></div>
+<div class="inventory-answer"><strong>Q7. Category with more sales:</strong><p>Computer Accessory (highest combined sales)</p></div>
+<div class="inventory-answer"><strong>Q8. Why monitor remaining stock?</strong><p>To avoid stockouts, plan restocking, prevent lost sales, and manage inventory efficiently.</p></div>
+<div class="inventory-answer"><strong>Q9. How sorting/filtering help?</strong><p>Sorting ranks products by performance; filtering focuses on specific categories or criteria for faster decisions.</p></div>
+<div class="inventory-answer"><strong>Q10. Restock first?</strong><p>Keyboard – lowest remaining stock (3) and high sales (₱3,750). Also Computer Mouse and Printer Ink (4 remaining).</p></div></div>
+      </div>
+
+      <div class="inventory-panel">
+        <h3><i class="fas fa-trophy"></i> Challenge</h3>
+        <div class="inventory-answer"><strong>Product with largest sales percentage:</strong><p>Keyboard</p></div>
+      </div>
+
+      <div class="inventory-panel">
+        <h3><i class="fas fa-book-open"></i> Reflection (Sample Answers)</h3>
+        <div class="inventory-answers"><div class="inventory-answer"><strong>1. Most used formula:</strong><p>&#x27;=C4*D4 (Total Sales) and =F4-D4 (Remaining Stock)</p></div>
+<div class="inventory-answer"><strong>2. Formula vs Function:</strong><p>Formula is any calculation (e.g. =A1*B1). Function is a predefined formula (SUM, AVERAGE, MAX).</p></div>
+<div class="inventory-answer"><strong>3. Why cell references?</strong><p>If data changes, formulas update automatically. Manual numbers require retyping everything.</p></div>
+<div class="inventory-answer"><strong>4. Sorting &amp; filtering large data:</strong><p>Quickly identify top/bottom performers and focus on relevant subsets without scanning all rows.</p></div>
+<div class="inventory-answer"><strong>5. Why charts useful?</strong><p>Visual comparison makes trends and differences obvious at a glance for better decision-making.</p></div>
+<div class="inventory-answer"><strong>6. Problems from incorrect data:</strong><p>Wrong totals, bad decisions on restocking, inventory shortages or overstock, lost revenue.</p></div>
+<div class="inventory-answer"><strong>7. Real business application:</strong><p>Any retail store can track sales, monitor stock levels, identify best-sellers, and plan purchasing.</p></div></div>
+      </div>
+
+      <div class="inventory-panel">
+        <h3><i class="fas fa-clipboard-list"></i> Notes</h3>
+        <ul class="inventory-notes"><li>To sort: Select A3:H13 → Data → Sort → Sort by Total Sales (Largest to Smallest)</li>
+<li>To filter: Select A3:H13 → Data → Filter. Then use dropdowns for Category, Quantity Sold &gt;10, Remaining Stock &lt;10</li>
+<li>After filtering, clear the filter to restore full dataset.</li></ul>
+      </div>
+    </section>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-btn">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="works.html" class="nav-btn">
+            <i class="fas fa-book"></i>
+            <span>Works</span>
+        </a>
+        <a href="projects.html" class="nav-btn active">
+            <i class="fas fa-folder"></i>
+            <span>Projects</span>
+        </a>
+        <a href="contact.html" class="nav-btn">
+            <i class="fas fa-paper-plane"></i>
+            <span>Contact</span>
+        </a>
+    </nav>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html>

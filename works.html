@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Works | Jhon Hendrix Calumpit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --neon-blue: #00f0ff;
+            --neon-purple: #b026ff;
+            --neon-pink: #ff2d95;
+            --bg-dark: #050714;
+            --bg-card: rgba(10, 14, 39, 0.7);
+            --text-light: #e0e9ff;
+        }
+
+        body {
+            background: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at top left, rgba(0, 240, 255, 0.08), transparent 50%),
+                radial-gradient(circle at bottom right, rgba(176, 38, 255, 0.08), transparent 50%);
+            min-height: 100vh;
+            color: var(--text-light);
+            padding-bottom: 100px;
+            overflow-x: hidden;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            width: 0%;
+            z-index: 999;
+            transition: width 0.1s ease;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 50px 20px 30px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .page-header h1 {
+            font-size: 1.9rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: rgba(224, 233, 255, 0.6);
+            font-size: 0.95rem;
+        }
+
+        .content {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.35s ease;
+            opacity: 0;
+            transform: translateY(25px);
+            animation: cardFadeIn 0.7s ease forwards;
+        }
+
+        .project-card:nth-child(1) { animation-delay: 0.1s; }
+        .project-card:nth-child(2) { animation-delay: 0.2s; }
+        .project-card:nth-child(3) { animation-delay: 0.3s; }
+        .project-card:nth-child(4) { animation-delay: 0.4s; }
+        .project-card:nth-child(5) { animation-delay: 0.5s; }
+
+        .project-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .project-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .project-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(0, 240, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neon-blue);
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .project-header h3 {
+            font-size: 1.05rem;
+            margin-bottom: 3px;
+        }
+
+        .project-header .subtitle {
+            font-size: 0.8rem;
+            color: rgba(224, 233, 255, 0.5);
+        }
+
+        .project-card p {
+            color: rgba(224, 233, 255, 0.7);
+            font-size: 0.88rem;
+            line-height: 1.55;
+            margin-bottom: 12px;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tech-tag {
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(176, 38, 255, 0.12);
+            border: 1px solid rgba(176, 38, 255, 0.25);
+            color: #d4a5ff;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(8, 12, 34, 0.85);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 10px 20px;
+            border-top: 1px solid rgba(0, 240, 255, 0.1);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: rgba(224, 233, 255, 0.4);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            color: var(--neon-blue);
+            transform: translateY(-3px);
+        }
+
+        .nav-btn i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .nav-btn span {
+            font-size: 0.65rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Literary Analysis styles */
+        .analysis-details {
+            margin-top: 16px;
+            border-top: 1px solid rgba(0, 240, 255, 0.18);
+            padding-top: 12px;
+        }
+
+        .analysis-details summary {
+            color: var(--neon-blue);
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            list-style-position: inside;
+            padding: 4px 0;
+        }
+
+        .analysis-paper {
+            margin-top: 14px;
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(5, 7, 20, 0.65);
+            border: 1px solid rgba(176, 38, 255, 0.2);
+        }
+
+        .analysis-paper h2 {
+            color: var(--neon-blue);
+            font-size: 1.05rem;
+            line-height: 1.45;
+            margin-bottom: 16px;
+        }
+
+        .analysis-paper h3 {
+            color: #d4a5ff;
+            font-size: 0.92rem;
+            margin: 16px 0 7px;
+        }
+
+        .analysis-paper p {
+            color: rgba(224, 233, 255, 0.78);
+            font-size: 0.86rem;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="page-header">
+        <h1>My Works</h1>
+        <p>Poems, stories, essays & project outputs</p>
+    </div>
+
+    <div class="content">
+        <div class="project-card">
+            <div class="project-header">
+                <div class="project-icon"><i class="fas fa-globe"></i></div>
+                <div>
+                    <h3>Personal Portfolio</h3>
+                    <div class="subtitle">Neon Glass Website</div>
+                </div>
+            </div>
+            <p>A mobile-friendly multi-page portfolio with glassmorphism cards, neon accents, typing effect, and bottom navigation.</p>
+            <div class="tech-tags">
+                <span class="tech-tag">HTML</span>
+                <span class="tech-tag">CSS</span>
+                <span class="tech-tag">JavaScript</span>
+            </div>
+        </div>
+
+        </div>
+        </div>
+
+        <div class="project-card">
+            <div class="project-header">
+                <div class="project-icon"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <h3>A Little Light in a Difficult World</h3>
+                    <div class="subtitle">Literary Analysis Paper — “The Small Lamp”</div>
+                </div>
+            </div>
+            <p>A literary analysis of Daniel's struggles, the symbolism of darkness and light, and the story's message about perseverance, hope, and determination.</p>
+            <div class="tech-tags">
+                <span class="tech-tag">21st Century Literature</span>
+                <span class="tech-tag">Literary Analysis</span>
+                <span class="tech-tag">The Small Lamp</span>
+            </div>
+
+            <details class="analysis-details">
+                <summary>Read the complete analysis paper</summary>
+                <article class="analysis-paper">
+                    <h2>A Little Light in a Difficult World: An Analysis of “The Small Lamp”</h2>
+
+                    <h3>Introduction</h3>
+                    <p>“The Small Lamp” is a story about Daniel, a student who continues studying despite poverty and many difficulties. Even when the electricity goes out, he finds a candle and continues learning. The story teaches us that hope and determination can help us overcome challenges.</p>
+
+                    <h3>Daniel’s Conflict and Character</h3>
+                    <p>Daniel struggles with poverty and difficult living conditions. There are times when he feels tired and wants to give up, but he chooses to continue studying. This shows that he is determined, hardworking, and responsible. His decision to keep going proves that challenges should not stop us from reaching our dreams.</p>
+
+                    <h3>Symbolism of Darkness and Light</h3>
+                    <p>The darkness represents Daniel’s problems, struggles, and fears. Meanwhile, the lamp and candle symbolize hope, knowledge, and determination. Even though the light is small, it helps Daniel continue studying. This shows that even a little hope can make a big difference in life.</p>
+
+                    <h3>Theme and Values</h3>
+                    <p>The main theme of the story is perseverance. Daniel teaches us to stay strong even when life becomes difficult. His journey also shows the importance of education, patience, and hard work. When he becomes a teacher, he proves that success can also be used to help others.</p>
+
+                    <h3>Conclusion</h3>
+                    <p>In conclusion, “The Small Lamp” reminds us that challenges are part of life, but we should never easily give up. Daniel's story teaches us that small efforts, combined with hope and determination, can lead to a better future.</p>
+                </article>
+            </details>
+        </div>
+
+        <div class="project-card">
+            <div class="project-header">
+                <div class="project-icon"><i class="fas fa-feather-alt"></i></div>
+                <div>
+                    <h3>Poem</h3>
+                    <div class="subtitle">The Future Begins With Me</div>
+                </div>
+            </div>
+            <p>An original poem about hope, courage, kindness, and taking responsibility for the future — with a personal reflection on the inspiration behind it.</p>
+            <div class="tech-tags">
+                <span class="tech-tag">Poetry</span>
+                <span class="tech-tag">Creative Writing</span>
+                <span class="tech-tag">Reflection</span>
+            </div>
+
+            <details class="analysis-details">
+                <summary>Read the complete poem &amp; reflection</summary>
+                <article class="analysis-paper">
+                    <h2>The Future Begins With Me</h2>
+
+                    <p>I carry dreams beyond the sky,<br>
+                    Not afraid to reach and try.<br>
+                    Though storms may test my will each day,<br>
+                    I find the strength to lead the way.</p>
+
+                    <p>Each mistake becomes my guide,<br>
+                    Building courage deep inside.<br>
+                    With hope that shines like morning light,<br>
+                    I’ll face each challenge, win each fight.</p>
+
+                    <p>Kindness will be my greatest power,<br>
+                    Growing stronger every hour.<br>
+                    The future starts with what I do,<br>
+                    A better world begins with me and you.</p>
+
+                    <h3>Reflection</h3>
+                    <p>I was inspired to write this poem because I believe that every person has the power to create a better future through their choices and actions. I want my readers to remember that success begins with hope, hard work, and kindness. Even when life becomes difficult, we should never stop believing in ourselves. Writing this poem helped me express my dreams and reminded me to stay strong despite challenges. It also encouraged me to reflect on the values I want to carry as I grow. I hope my poem inspires others to become the best version of themselves and make a positive difference in the world.</p>
+                </article>
+            </details>
+        </div>
+    </div>
+
+<nav class="bottom-nav">
+        <a href="index.html" class="nav-btn">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="works.html" class="nav-btn active">
+            <i class="fas fa-book"></i>
+            <span>Works</span>
+        </a>
+        <a href="projects.html" class="nav-btn">
+            <i class="fas fa-folder"></i>
+            <span>Projects</span>
+        </a>
+        <a href="contact.html" class="nav-btn">
+            <i class="fas fa-paper-plane"></i>
+            <span>Contact</span>
+        </a>
+    </nav>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html>
